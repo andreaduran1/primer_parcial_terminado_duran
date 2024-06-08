@@ -15,17 +15,18 @@ def menu()->str:
 
 
 def redes_app():
+    bandera_3 = False
+    bandera_1 = False
+
     while True:
 
         menu()
         aux = input("Ingrese la opción deseada: ")
         opcion = int(aux)
-
         match opcion:
             case 1:
                 while True:
                     nombre_archivo = input("Ingrese el nombre del archivo a cargar: ")
-
                     try:
                         with open(get_path_actual(nombre_archivo), "r", encoding="utf-8") as archivo:
                             encabezado = archivo.readline().strip("\n").split(",")
@@ -47,83 +48,99 @@ def redes_app():
                                 post["dislikes"] = int(dislikes)
                                 post["followers"] = int(followers)
                                 lista_posts.append(post)
+                            
+                            
                             print("El archivo se cargó con éxito")
+                        bandera_1 = True
                         break
                     except:
                         print("El nombre del archivo es incorrecto o no existe. Por favor intente de nuevo.")
 
             case 2:
-                    mostrar_posteos(lista_posts)
-            
+                    if bandera_1:
+                        mostrar_posteos(lista_posts)
+                    else:
+                        print("Primero debe ingresar un archivo")
             case 3:
-                    lista_estadisticas = mapear_lista(lista_posts)
-
+                    if bandera_1:
+                        lista_estadisticas = mapear_lista(lista_posts)
+                        bandera_3 = True
+                    else:
+                        print("Primero debe ingresar un archivo")
             case 4:
-                    mejores_posteos = filtrar_lista(lambda post: post["likes"] > 2000, lista_estadisticas)
+                    if bandera_3:
+                        mejores_posteos = filtrar_lista(lambda post: post["likes"] > 2000, lista_estadisticas)
 
-                    with open(get_path_actual("mejores_posteos.csv"),"w", encoding="utf-8") as archivo:
-                        encabezado = ",".join(list(mejores_posteos[0].keys())) + "\n"
+                        with open(get_path_actual("mejores_posteos.csv"),"w", encoding="utf-8") as archivo:
+                            encabezado = ",".join(list(mejores_posteos[0].keys())) + "\n"
 
-                        archivo.write(encabezado)
-                        
-                        for post in mejores_posteos:
-                            values = list(post.values())
-                            l = []
+                            archivo.write(encabezado)
+                            
+                            for post in mejores_posteos:
+                                values = list(post.values())
+                                l = []
 
-                            for value in values:
-                                if isinstance(value, int):
-                                    l.append(str(value))
-                                elif isinstance(value, float):
-                                    l.append(str(value))
-                                else:
-                                    l.append(value)
-                                    
-                            linea = ",".join(l) + "\n"
-                            archivo.write(linea)
-
+                                for value in values:
+                                    if isinstance(value, int):
+                                        l.append(str(value))
+                                    elif isinstance(value, float):
+                                        l.append(str(value))
+                                    else:
+                                        l.append(value)
+                                        
+                                linea = ",".join(l) + "\n"
+                                archivo.write(linea)
+                    else:
+                        print("Primero debe cargar estadisticas")
             case 5:
-                    filtrar_haters = filtrar_lista(lambda post: post["dislikes"] > post["likes"], lista_estadisticas)          
-                    with open(get_path_actual("haters.csv"),"w", encoding="utf-8") as archivo:
-                        encabezado = ",".join(list(filtrar_haters[0].keys())) + "\n"
-        
-        
+                    if bandera_3:
+                        filtrar_haters = filtrar_lista(lambda post: post["dislikes"] > post["likes"], lista_estadisticas)   
+                        with open(get_path_actual("haters.csv"),"w", encoding="utf-8") as archivo:
+                            encabezado = ",".join(list(filtrar_haters[0].keys())) + "\n"
 
-                        archivo.write(encabezado)
-        
-                        for user in filtrar_haters:
-                            values = filtrar_haters(user.values())
-                            l = []
+                            archivo.write(encabezado)
+                            
+                            for post in filtrar_haters:
+                                values = list(post.values())
+                                l = []
 
-                            for value in values:
-                                if isinstance(value, int):
-                                    l.append(str(value))
-                                elif isinstance(value, float):
-                                    l.append(str(value))
-                                else:
-                                    l.append(value)
-                                    
-                            linea = ",".join(l) + "\n"
-                            archivo.write(linea)
+                                for value in values:
+                                    if isinstance(value, int):
+                                        l.append(str(value))
+                                    elif isinstance(value, float):
+                                        l.append(str(value))
+                                    else:
+                                        l.append(value)
+                                        
+                                linea = ",".join(l) + "\n"
+                                archivo.write(linea)
+                    else:
+                        print("Primero debe cargar estadisticas")
 
 
             case 6:
-                    campo = "followers"
-                    promedio_campo(lista_estadisticas,campo)
-
+                    if bandera_3:
+                        campo = "followers"
+                        promedio_campo(lista_estadisticas,campo)
+                    else:
+                        print("Primero debe ingresar un archivo")
             case 7:
-                    ordenar_lista(lambda a, b: a["user"] > b["user"], lista_estadisticas)
+                    if bandera_3:
+                        ordenar_lista(lambda a, b: a["user"] > b["user"], lista_estadisticas)
 
-                    with open(
-                        get_path_actual("user_ascendente.json"), "w", encoding="utf-8"
-                    ) as archivo:
-                        json.dump(lista_estadisticas, archivo, indent=4)
-
+                        with open(
+                            get_path_actual("user_ascendente.json"), "w", encoding="utf-8"
+                        ) as archivo:
+                            json.dump(lista_estadisticas, archivo, indent=4)
+                    else:
+                        print("Primero debe ingresar un archivo")
 
             case 8:
-
+                if bandera_3:
                     user_popular= reduce_lista(lambda ant, act: act if ant['likes'] < act['likes'] else ant, lista_estadisticas)
                     print(f"El user {user_popular["user"]} tiene el posteo más likeado con {user_popular["likes"]} likes")
-
+                else:
+                    print("Primero debe ingresar un archivo")
 
             case 9:
                 print("Saliendo de la aplicación")
