@@ -121,7 +121,7 @@ def redes_app():
 
             case 8:
 
-                    user_popular= reduce_lista(lambda ant, act: act if ant['likes'] < act['likes'] else ant, lista_estadisticas1)
+                    user_popular= reduce_lista(lambda ant, act: act if ant['likes'] < act['likes'] else ant, lista_estadisticas)
                     print(f"El user {user_popular["user"]} tiene el posteo más likeado con {user_popular["likes"]} likes")
 
 
