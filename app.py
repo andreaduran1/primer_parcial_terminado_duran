@@ -108,7 +108,7 @@ def redes_app():
 
             case 6:
                     campo = "followers"
-                    promedio_campo(nueva_lista,campo)
+                    promedio_campo(lista_estadisticas,campo)
 
             case 7:
                     ordenar_lista(lambda a, b: a["user"] > b["user"], lista_estadisticas)
