@@ -66,7 +66,7 @@ while continuar:
         case "4":
                 if bandera_carga_archivo:
                     if bandera_estadisticas:
-                        mejores_posteos = filtrar_lista(lambda post: post["likes"] > 2000, lista_posts)
+                        mejores_posteos = filtrar_mejores_posteos(lista_posts)
 
                         with open(get_path_actual("mejores_posts.csv"),"w", encoding="utf-8") as archivo:
                             encabezado = ",".join(list(mejores_posteos[0].keys())) + "\n"
@@ -99,7 +99,7 @@ while continuar:
         case "5":
                 if bandera_carga_archivo:
                     if bandera_estadisticas:
-                        filtrar_haters = filtrar_lista(lambda post: post["dislikes"] > post["likes"], lista_posts)   
+                        filtrar_haters = filtrar_haters(lista_posts)  
                         with open(get_path_actual("haters_posts.csv"),"w", encoding="utf-8") as archivo:
                             encabezado = ",".join(list(filtrar_haters[0].keys())) + "\n"
 
@@ -141,7 +141,7 @@ while continuar:
         case "7":
                 if bandera_carga_archivo:
                     if bandera_estadisticas:
-                        ordenar_lista(lambda a, b: a["user"] > b["user"], lista_posts)
+                        ordenar_users_ascendente(lista_posts)
 
                         with open(
                             get_path_actual("user_ascendente.json"), "w", encoding="utf-8"
@@ -160,7 +160,7 @@ while continuar:
         case "8":
             if bandera_carga_archivo:
                 if bandera_estadisticas:
-                    user_popular= reduce_lista(lambda ant, act: act if ant['likes'] < act['likes'] else ant, lista_posts)
+                    user_popular= obtener_user_popular(lista_posts)
                     print(f"El user {user_popular["user"]} tiene el posteo más likeado con {user_popular["likes"]} likes")
                     espacio()
                 else:

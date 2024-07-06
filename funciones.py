@@ -1,4 +1,19 @@
+LIKES_MIN = 500
+LIKES_MAX = 3000
+DISLIKES_MIN= 300
+DISLIKES_MAX = 3500
+FOLLOWERS_MIN = 10000
+FOLLOWERS_MAX = 20000
+
+MAYOR_LIKES = 2000
+
 def get_path_actual(nombre_archivo):
+    """Recibe el nombre de el archivo que queremos cargar y lo busca dentro del directorio actual
+
+    Args:
+        nombre_archivo: Nombre del archivo csv a cargar
+
+    """    
     import os
 
     directorio_actual = os.path.dirname(__file__)
@@ -6,6 +21,8 @@ def get_path_actual(nombre_archivo):
 
 
 def menu():
+    """Imprime un menu de opciones
+    """    
     print("\nMenu de opciones:")
     print("1. Cargar archivo CSV")
     print("2. Imprimir lista")
@@ -18,6 +35,8 @@ def menu():
     print("9. Salir\n")
 
 def espacio()->None:
+    """Genera un espacio en blanco
+    """    
     print("")
 
 def validar_lista(lista: list) -> None:
@@ -107,13 +126,6 @@ def mapear_lista(lista:list)->list:
     validar_lista(lista)
 
     lista_retorno = []
-
-    LIKES_MIN = 500
-    LIKES_MAX = 3000
-    DISLIKES_MIN= 300
-    DISLIKES_MAX = 3500
-    FOLLOWERS_MIN = 10000
-    FOLLOWERS_MAX = 20000
     
     for el in lista:
         post = {}
@@ -192,21 +204,6 @@ def swap_lista(lista: list, i: int, j: int) -> None:
     lista[j] = aux
 
 
-def ordenar_lista(comparator, lista: list) -> None:
-    """Ordena una lista segun el criterio de ordenamiento de la funcion comparator
-
-    Args:
-        comparator: funcion comparadora que determina el criterio de ordenamiento
-        lista (list): recibe la lista a ordenar
-    """    
-    tam = len(lista)
-
-    for i in range(tam - 1):
-        for j in range(i + 1, tam):
-            if comparator(lista[i], lista[j]):
-                swap_lista(lista, i, j)
-
-
 def reduce_lista(funcion, lista:list, valor_inicial:int = None)->int:
     """Ejecuta una funcion reductora sobre cada elemento de la lista, devolviendo como resultado un unico valor
 
@@ -237,13 +234,49 @@ def reduce_lista(funcion, lista:list, valor_inicial:int = None)->int:
     
     return ant
 
-def mostrar_lista_tuplas(lista:list)->None:
-    """Muestra los elementos de una lista como tuplas
+
+def filtrar_mejores_posteos(lista:list)->list:
+    """Recibe una lista y filtra los posteos con más de 2000 likes.
 
     Args:
-        lista (list): recibe una lista
-    """
-    for tupla in lista:
-        for elemento in tupla:
-            print(f"{elemento:15}",end="")
-        print()
+        lista (list): lista con likes a filtrar
+
+    Return:
+        Retorna una lista filtrada
+    """    
+    return filtrar_lista(lambda post: post["likes"] > MAYOR_LIKES, lista)
+
+
+def filtrar_haters(lista:list)->list:
+    """Filtra los post donde la cantidad de dislikes es mayor que la de likes
+
+    Args:
+        lista (list): Lista con posts a filtrar
+
+    Returns:
+        list: Lista filtrada
+    """    
+    return filtrar_lista(lambda post: post["dislikes"] > post["likes"], lista) 
+
+
+def ordenar_users_ascendente(lista: list) -> None:
+    """Ordena alfabeticamente una lista de usuarios de forma ascendente (A-Z)
+
+    Args:
+        lista (list): recibe la lista a ordenar
+    """    
+    tam = len(lista)
+
+    for i in range(tam - 1):
+        for j in range(i + 1, tam):
+            if lista[i]['user'] > lista[j]['user']:
+                swap_lista(lista, i, j)
+
+def obtener_user_popular(lista:list):
+    """Obtiene al usuario con más followers de una lista de posts
+
+    Args:
+        lista (list): Recibe la lista con posts para
+
+    """    
+    return reduce_lista(lambda ant, act: act if ant['likes'] < act['likes'] else ant, lista)
