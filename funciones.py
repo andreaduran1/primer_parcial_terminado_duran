@@ -5,11 +5,42 @@ def get_path_actual(nombre_archivo):
     return os.path.join(directorio_actual,nombre_archivo)
 
 
+def menu():
+    print("\nMenu de opciones:")
+    print("1. Cargar archivo CSV")
+    print("2. Imprimir lista")
+    print("3. Asignar estadisticas")  
+    print("4. Filtrar por mejores posts")  
+    print("5. Filtrar por haters")
+    print("6. Informar promedio de followers")
+    print("7. Ordenar los datos por nombre de user ascendente")
+    print("8. Mostrar más popular")
+    print("9. Salir\n")
+
+def espacio()->None:
+    print("")
+
 def validar_lista(lista: list) -> None:
+    """Valida que el argumento ingresado sea una lista
+
+    Args:
+        lista (list): Recibe una lista
+
+    Raises:
+        TypeError: Si el argumento ingresado no es una lista.
+    """    
     if not isinstance(lista, list):
         raise TypeError("Se esperaba una lista.")
     
 def sumar_lista(lista: list) -> int:
+    """Suma todos los elementos de una lista
+
+    Args:
+        lista (list): Recibe una lista
+
+    Returns:
+        int: El resultado de la sumatoria de todos los elementos de la lista
+    """    
     suma = 0
     validar_lista(lista)
     for i in lista:
@@ -18,8 +49,16 @@ def sumar_lista(lista: list) -> int:
     return suma
 
 def calcular_promedio(lista: list) -> float:
+    """Calcula el promedio de los elementos de una lista
+
+    Args:
+        lista (list): Recibe una lista
+
+    Returns:
+        float: El resultado de la sumatoria de todos los elementos de la lista dividido por la cantidad de elementos de la lista
+    """    
     validar_lista(lista)
-    # Validación dentro de la función
+
     if len(lista) != 0:
         promedio = sumar_lista(lista) / len(lista)
         return promedio
@@ -28,7 +67,11 @@ def calcular_promedio(lista: list) -> float:
 
 
 def mostrar_posteos(posteos: list) -> None:
+    """Muestra los elementos(posts) de una lista
 
+    Args:
+        posteos (list): recibe una lista
+    """
     validar_lista(posteos)
 
     print("         ***Lista de Posteos***             ") 
@@ -38,14 +81,27 @@ def mostrar_posteos(posteos: list) -> None:
     for i in range(len(posteos)):
         mostrar_post_item(posteos[i])
 
-# Imprime empleado en una linea
+
 def mostrar_post_item(post: dict) -> None:
+    """Muestra el elemento de un diccionario
+
+    Args:
+        post (dict): recibe un elemento de diccionario
+    """    
     print(
         f"{post["id"]:>4} {post["user"]:>20}    {post["likes"]:>6}    {post["dislikes"]:8}   {post["followers"]:6}"
     )
 
 
 def mapear_lista(lista:list)->list:
+    """Mapea una lista generando una nueva lista
+
+    Args:
+        lista (list): Recibe una lista
+
+    Returns:
+        list: retorna una nueva lista
+    """    
     from random import randint
 
     validar_lista(lista)
@@ -75,7 +131,16 @@ def mapear_lista(lista:list)->list:
 
     return lista_retorno
 
-def mapear_campo(lista:list, campo:str)->None:
+def mapear_campo(lista:list, campo:str)->list:
+    """Mapea una lista en base al campo ingresado, retornando una nueva lista
+
+    Args:
+        lista (list): recibe una lista
+        campo (str): recibe el parametro que se quiere mapear en la lista
+
+    Returns:
+        list: retorna una nueva lista
+    """    
     validar_lista(lista)
     lista_retorno = []
 
@@ -85,6 +150,15 @@ def mapear_campo(lista:list, campo:str)->None:
     return lista_retorno
 
 def filtrar_lista(filtradora, lista: list)->list:
+    """Retornando una nueva lista filtrada segun las condiciones de la funcion filtradora
+
+    Args:
+        filtradora: recibe una funcion filtradora
+        lista (list): recibe una lista a filtrar
+
+    Returns:
+        list: retorna la lista filtrada
+    """    
     validar_lista(lista)
     lista_filtrada = []
     for el in lista:
@@ -93,19 +167,38 @@ def filtrar_lista(filtradora, lista: list)->list:
     return lista_filtrada
 
 
-def promedio_campo(lista:list, campo:str):
+def mostrar_promedio_campo(lista:list, campo:str)->None:
+    """Promedia en una lista solo los valores del campo ingresado como atributo
+
+    Args:
+        lista (list): recibe una lista
+        campo (str): recibe el campo de la lista que se quiere promediar
+    """    
     validar_lista(lista)
     resultado = mapear_campo(lista,campo)
         
     print(f"El promedio de {campo} es {calcular_promedio(resultado):.0f}")
 
 def swap_lista(lista: list, i: int, j: int) -> None:
+    """Realiza el cambio de lugar entre dos elementos de una listas segun el criterio de ordenamiento
+
+    Args:
+        lista (list): recibe una lista a ordenar
+        i (int): el primer elemento a comparar
+        j (int): el segundo elemento a comparar
+    """    
     aux = lista[i]
     lista[i] = lista[j]
     lista[j] = aux
 
 
 def ordenar_lista(comparator, lista: list) -> None:
+    """Ordena una lista segun el criterio de ordenamiento de la funcion comparator
+
+    Args:
+        comparator: funcion comparadora que determina el criterio de ordenamiento
+        lista (list): recibe la lista a ordenar
+    """    
     tam = len(lista)
 
     for i in range(tam - 1):
@@ -114,7 +207,20 @@ def ordenar_lista(comparator, lista: list) -> None:
                 swap_lista(lista, i, j)
 
 
-def reduce_lista(funcion, lista, valor_inicial = None):
+def reduce_lista(funcion, lista:list, valor_inicial:int = None)->int:
+    """Ejecuta una funcion reductora sobre cada elemento de la lista, devolviendo como resultado un unico valor
+
+    Args:
+        funcion: funcion reductora a ejecutar en cada elemento de la lista.
+        lista (list): lista de elementos a ser reducida.
+        valor_inicial (int, optional): primer argumento en la primera llamada a funcion. Defaults to None.
+
+    Raises:
+        ValueError: Si la lista esta vacia.
+
+    Returns:
+        int: retorna un unico valor como resultado de aplicar la funcion reductora
+    """
     tam = len(lista)
     if tam == 0:
         raise ValueError("Error. Lista vacia")
@@ -132,6 +238,11 @@ def reduce_lista(funcion, lista, valor_inicial = None):
     return ant
 
 def mostrar_lista_tuplas(lista:list)->None:
+    """Muestra los elementos de una lista como tuplas
+
+    Args:
+        lista (list): recibe una lista
+    """
     for tupla in lista:
         for elemento in tupla:
             print(f"{elemento:15}",end="")
